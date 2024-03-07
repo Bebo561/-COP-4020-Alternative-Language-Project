@@ -1,0 +1,200 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+
+public class CellsManipulation {
+
+    public static void main(String[] args) {
+        String csvFile = "cells.csv"; 
+        
+        HashMap<Integer, Cell> cellMap = new HashMap<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            //Skip the headers
+            br.readLine();
+            
+            String line;
+            int id = 1; // Start ID from 1
+            
+            //Go through each row of the csv
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                
+                //Take in input of csv into cell object
+                Cell cell = new Cell();
+                cell.setOEM(cleanStrings(data[0]));
+                cell.setModel(cleanStrings(data[1]));
+                cell.setLaunchAnnounced(data[2]);
+                cell.setLaunchStatus(data[3]);
+                cell.setBodyDimensions(data[4]);
+                cell.setBodyWeight(data[5]);
+                cell.setBodySim(data[6]);
+                cell.setDisplayType(data[7]);
+                cell.setDisplaySize(data[8]);
+                cell.setDisplayResolution(data[9]);
+                cell.setFeaturesSensors(data[10]);
+                cell.setPlatformOS(data[11]);
+                
+                //Store each cell object in hashmap, mapped to its row number.
+                cellMap.put(id++, cell);
+            }
+
+            //Print out initial cells
+            for(int i = 1; i <= cellMap.size(); i++){
+                Cell cell = cellMap.get(i);
+                System.out.println("Cell " + i + ": " + cell.getlaunchAnnounced().toString() );
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String cleanStrings(String input){
+        if(input == ""){
+            input = null;
+        }
+        return input;
+    }
+
+    public static Integer cleanLaunchAnnounced(String input){
+        Integer returnValue;
+        if(input.length() < 4){
+            returnValue = null;
+        }
+        else if(!isNumeric(input.substring(0,4))){
+            returnValue = null;
+        }
+        else{
+            String temp = input.substring(0,4);
+            returnValue = Integer.parseInt(temp);
+        }
+
+        return returnValue;
+    }
+
+
+    public static boolean isNumeric(String str) {
+        try {
+            
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+}
+
+
+class Cell {
+    private String oem;
+    private String model;
+    private String launch_announced;
+    private String launch_status;
+    private String body_dimensions;
+    private String body_weight;
+    private String body_sim;
+    private String display_type;
+    private String display_size;
+    private String display_resolution;
+    private String features_sensors;
+    private String platform_os;
+    
+    // Getters and setters 
+    public String getOEM(){
+        return oem;
+    }
+
+    public void setOEM(String OEM){
+        this.oem = OEM;
+    }
+
+    public String getModel(){
+        return model;
+    }
+
+    public void setModel(String model){
+        this.model = model;
+    }  
+
+    public String getlaunchAnnounced(){
+        return launch_announced;
+    }
+
+    public void setLaunchAnnounced(String launchedAnnounced){
+        this.launch_announced = launchedAnnounced;
+    }
+
+    public String getLaunchStatus(){
+        return launch_status;
+    }
+
+    public void setLaunchStatus(String launchStatus){
+        this.launch_status = launchStatus;
+    }
+
+    public String getBodyDimensions(){
+        return body_dimensions;
+    }
+
+    public void setBodyDimensions(String bodyDimensions){
+        this.body_dimensions = bodyDimensions;
+    }
+
+    public String getBodyWeight(){
+        return body_weight;
+    }
+
+    public void setBodyWeight(String bodyWeight){
+        this.body_weight = bodyWeight;
+    }
+
+    public String getBodySim(){
+        return body_sim;
+    }
+
+    public void setBodySim(String bodySim){
+        this.body_sim = bodySim;
+    }
+
+    public String getDisplayType(){
+        return display_type;
+    }
+
+    public void setDisplayType(String displayType){
+        this.display_type = displayType;
+    }
+
+    public String getDisplaySize(){
+        return display_size;
+    }
+
+    public void setDisplaySize(String displaySize){
+        this.display_size = displaySize;
+    }
+
+    public String getDisplayResolution(){
+        return display_resolution;
+    }
+
+    public void setDisplayResolution(String displayResolution){
+        this.display_resolution = displayResolution;
+    }
+
+    public String getFeaturesSensors(){
+        return features_sensors;
+    }
+
+    public void setFeaturesSensors(String featureSensor){
+        this.features_sensors = featureSensor;
+    }
+
+    public String getPlatformOS(){
+        return platform_os;
+    }
+
+    public void setPlatformOS(String platformOS){
+        this.platform_os = platformOS;
+    }
+}
