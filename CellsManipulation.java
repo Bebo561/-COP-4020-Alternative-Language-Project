@@ -29,7 +29,7 @@ public class CellsManipulation {
                 cell.setModel(cleanStrings(data[1]));
                 cell.setLaunchAnnounced(cleanLaunchAnnounced(data[2], id));
                 cell.setLaunchStatus(cleanLaunchStatus(data[3]));
-                cell.setBodyDimensions(data[4]);
+                cell.setBodyDimensions(cleanStrings(data[4]));
                 cell.setBodyWeight(data[5]);
                 cell.setBodySim(data[6]);
                 cell.setDisplayType(data[7]);
@@ -46,7 +46,7 @@ public class CellsManipulation {
            for(int i = 1; i <= cellMap.size(); i++){
             Cell cell = cellMap.get(i);
             
-            //System.out.println("Cell" + i + ": " + cell.getLaunchStatus());
+            System.out.println("Cell" + i + ": " + cell.getBodyDimensions());
             
         }
         } catch (IOException e) {
@@ -55,8 +55,9 @@ public class CellsManipulation {
     }
 
     public static String cleanStrings(String input){
-        if(input == ""){
-            input = null;
+        input = removeQuotes(input);
+        if( "-".equals(input) ){
+            return null;
         }
         return input;
     }
@@ -68,10 +69,10 @@ public class CellsManipulation {
 
         Integer returnValue;
         if(input.length() < 4){
-            returnValue = null;
+            return null;
         }
         else if(!isNumeric(input.substring(0,4))){
-            returnValue = null;
+            return null;
         }
         else{
             String temp = input.substring(0,4);
