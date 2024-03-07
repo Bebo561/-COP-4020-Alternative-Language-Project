@@ -3,7 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.HashMap;
+import java.util.*;
 
 public class CellsManipulation {
 
@@ -12,7 +12,6 @@ public class CellsManipulation {
         
         HashMap<Integer, Cell> cellMap = new HashMap<>();
 
-        //To do - Feature Sensor, Platform OS
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             //Skip the headers
             br.readLine();
@@ -43,17 +42,46 @@ public class CellsManipulation {
                 cellMap.put(id++, cell);
             }
 
-           //Print out initial cells
+            //Initialize unique data function input arrays
+            ArrayList<String> oemList = new ArrayList<>();
+
+
+           //Get unique data for each cell attribute
            for(int i = 1; i <= cellMap.size(); i++){
             Cell cell = cellMap.get(i);
+            oemList.add(cell.getOEM());
             
-            
-            System.out.println("Cell" + i + ": " + cell.getPlatformOS());
             
         }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    //Returns unique values for input data type of string
+    public static Set<String> uniqueDataStrings(String[] input){
+        Set<String> uniqueValues = new HashSet<>();
+        for(String item : input){
+            uniqueValues.add(item);
+        }
+        return uniqueValues;
+    }
+
+    //Return unique values for input data type of flaot
+    public static Set<Float> uniqueDataFloats(Float[] input){
+        Set<Float> uniqueValues = new HashSet<>();
+        for(Float item : input){
+            uniqueValues.add(item);
+        }
+        return uniqueValues;
+    }
+
+    public static Set<Integer> uniqueDataInteger(Integer[] input){
+        Set<Integer> uniqueValues = new HashSet<>();
+        for(Integer item : input){
+            uniqueValues.add(item);
+        }
+        return uniqueValues;
     }
 
     public static String cleanPlatformOS(String input) {
