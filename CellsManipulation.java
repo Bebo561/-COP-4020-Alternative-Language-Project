@@ -30,7 +30,7 @@ public class CellsManipulation {
                 cell.setLaunchAnnounced(cleanLaunchAnnounced(data[2], id));
                 cell.setLaunchStatus(cleanLaunchStatus(data[3]));
                 cell.setBodyDimensions(cleanStrings(data[4]));
-                cell.setBodyWeight(data[5]);
+                cell.setBodyWeight(cleanBodyWeight(data[5]));
                 cell.setBodySim(cleanBodySim(data[6]));
                 cell.setDisplayType(cleanStrings(data[7]));
                 cell.setDisplaySize(data[8]);
@@ -46,8 +46,12 @@ public class CellsManipulation {
            for(int i = 1; i <= cellMap.size(); i++){
             Cell cell = cellMap.get(i);
             
-            System.out.println("Cell" + i + ": " + cell.getDisplayResolution());
-            
+            if(cell.getBodyWeight() == null){
+                System.out.println("Cell" + i + ": null");
+            }
+            else{
+                System.out.println("Cell" + i + ": " + cell.getBodyWeight());
+            }
         }
         } catch (IOException e) {
             e.printStackTrace();
@@ -87,13 +91,25 @@ public class CellsManipulation {
         return str.replace("\"", "");
     }
 
+    public static Float cleanBodyWeight(String input) {
+        //Regular expression to match the weight in grams
+        Pattern pattern = Pattern.compile("(\\d+) g");
+        Matcher matcher = pattern.matcher(input);
+
+        if (matcher.find()) {
+            String temp = matcher.group(1);
+            return Float.parseFloat(temp);
+        } else {
+            return null; 
+        }
+    }
+
     public static String cleanLaunchStatus(String str) {
         //Regular expression to match a 4-digit year
         str = removeQuotes(str);
         Pattern pattern = Pattern.compile("\\b\\d{4}\\b");
         Matcher matcher = pattern.matcher(str);
         
-        //Check if a match is found
         if("Discontinued".equals(str) || "Cancelled".equals(str )){
             return str;
         }
@@ -130,7 +146,7 @@ class Cell {
     private Integer launch_announced;
     private String launch_status;
     private String body_dimensions;
-    private String body_weight;
+    private Float body_weight;
     private String body_sim;
     private String display_type;
     private String display_size;
@@ -179,11 +195,11 @@ class Cell {
         this.body_dimensions = bodyDimensions;
     }
 
-    public String getBodyWeight(){
+    public Float getBodyWeight(){
         return body_weight;
     }
 
-    public void setBodyWeight(String bodyWeight){
+    public void setBodyWeight(Float bodyWeight){
         this.body_weight = bodyWeight;
     }
 
