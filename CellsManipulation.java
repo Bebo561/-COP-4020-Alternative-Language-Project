@@ -31,10 +31,10 @@ public class CellsManipulation {
                 cell.setLaunchStatus(cleanLaunchStatus(data[3]));
                 cell.setBodyDimensions(cleanStrings(data[4]));
                 cell.setBodyWeight(data[5]);
-                cell.setBodySim(data[6]);
-                cell.setDisplayType(data[7]);
+                cell.setBodySim(cleanBodySim(data[6]));
+                cell.setDisplayType(cleanStrings(data[7]));
                 cell.setDisplaySize(data[8]);
-                cell.setDisplayResolution(data[9]);
+                cell.setDisplayResolution(cleanStrings(data[9]));
                 cell.setFeaturesSensors(data[10]);
                 cell.setPlatformOS(data[11]);
                 
@@ -46,7 +46,7 @@ public class CellsManipulation {
            for(int i = 1; i <= cellMap.size(); i++){
             Cell cell = cellMap.get(i);
             
-            System.out.println("Cell" + i + ": " + cell.getBodyDimensions());
+            System.out.println("Cell" + i + ": " + cell.getDisplayResolution());
             
         }
         } catch (IOException e) {
@@ -107,12 +107,19 @@ public class CellsManipulation {
     //Helper function used to check if number is an integer or not
     public static boolean isNumeric(String str) {
         try {
-            
             Integer.parseInt(str);
             return true;
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    public static String cleanBodySim(String input) {
+        if(input.equals("Yes" )|| input.equals("No")){
+            return null;
+        }
+        return input;
+
     }
 }
 
