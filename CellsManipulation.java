@@ -12,6 +12,7 @@ public class CellsManipulation {
         
         HashMap<Integer, Cell> cellMap = new HashMap<>();
 
+        //To do - Feature Sensor, Platform OS
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             //Skip the headers
             br.readLine();
@@ -33,10 +34,10 @@ public class CellsManipulation {
                 cell.setBodyWeight(cleanBodyWeight(data[5]));
                 cell.setBodySim(cleanBodySim(data[6]));
                 cell.setDisplayType(cleanStrings(data[7]));
-                cell.setDisplaySize(data[8]);
+                cell.setDisplaySize(cleanDisplaySize(data[8]));
                 cell.setDisplayResolution(cleanStrings(data[9]));
-                cell.setFeaturesSensors(data[10]);
-                cell.setPlatformOS(data[11]);
+                cell.setFeaturesSensors(cleanFeatureSensors(data[10]));
+                cell.setPlatformOS(cleanPlatformOS(data[11]));
                 
                 //Store each cell object in hashmap, mapped to its row number.
                 cellMap.put(id++, cell);
@@ -46,21 +47,47 @@ public class CellsManipulation {
            for(int i = 1; i <= cellMap.size(); i++){
             Cell cell = cellMap.get(i);
             
-            if(cell.getBodyWeight() == null){
-                System.out.println("Cell" + i + ": null");
-            }
-            else{
-                System.out.println("Cell" + i + ": " + cell.getBodyWeight());
-            }
+            
+            System.out.println("Cell" + i + ": " + cell.getPlatformOS());
+            
         }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public static String cleanPlatformOS(String input) {
+        if (input.equals("-") || input.isEmpty()) {
+            return null;
+        }
+        
+        input = removeQuotes(input);
+
+        // Regular expression pattern to match everything up to the first comma or end of string
+        Pattern pattern = Pattern.compile("^(.*?)(?:,|$)");
+        Matcher matcher = pattern.matcher(input);
+        
+        if (matcher.find()) {
+            return matcher.group(1).trim();
+        } else {
+            return input.trim();
+        }
+    }
+
     public static String cleanStrings(String input){
         input = removeQuotes(input);
-        if( "-".equals(input) ){
+        if( input.equals("-") ||  input.isEmpty()){
+            return null;
+        }
+        return input;
+    }
+
+    public static String cleanFeatureSensors(String input){
+        input = removeQuotes(input);
+        if(input.equals("-") || input.isEmpty()){
+            return null;
+        }
+        if(onlyNumbers(input)){
             return null;
         }
         return input;
@@ -104,6 +131,19 @@ public class CellsManipulation {
         }
     }
 
+    public static Float cleanDisplaySize(String input) {
+        //Regular expression to match the weight in grams
+        Pattern pattern = Pattern.compile("(\\d+) inches");
+        Matcher matcher = pattern.matcher(input);
+
+        if (matcher.find()) {
+            String temp = matcher.group(1);
+            return Float.parseFloat(temp);
+        } else {
+            return null; 
+        }
+    }
+
     public static String cleanLaunchStatus(String str) {
         //Regular expression to match a 4-digit year
         str = removeQuotes(str);
@@ -121,9 +161,20 @@ public class CellsManipulation {
     }
 
     //Helper function used to check if number is an integer or not
-    public static boolean isNumeric(String str) {
+    public static boolean isNumeric(String input) {
         try {
-            Integer.parseInt(str);
+            Integer.parseInt(input);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    //This function essentially checks if the given string is made of only numbers. If it
+    //parses to a double it is only numbers. 
+    public static boolean onlyNumbers(String input) {
+        try {
+            Double.parseDouble(input);
             return true;
         } catch (NumberFormatException e) {
             return false;
@@ -131,6 +182,7 @@ public class CellsManipulation {
     }
 
     public static String cleanBodySim(String input) {
+        input = removeQuotes(input);
         if(input.equals("Yes" )|| input.equals("No")){
             return null;
         }
@@ -149,7 +201,7 @@ class Cell {
     private Float body_weight;
     private String body_sim;
     private String display_type;
-    private String display_size;
+    private Float display_size;
     private String display_resolution;
     private String features_sensors;
     private String platform_os;
@@ -219,11 +271,11 @@ class Cell {
         this.display_type = displayType;
     }
 
-    public String getDisplaySize(){
+    public Float getDisplaySize(){
         return display_size;
     }
 
-    public void setDisplaySize(String displaySize){
+    public void setDisplaySize(Float displaySize){
         this.display_size = displaySize;
     }
 
