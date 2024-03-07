@@ -25,7 +25,7 @@ public class CellsManipulation {
                 Cell cell = new Cell();
                 cell.setOEM(cleanStrings(data[0]));
                 cell.setModel(cleanStrings(data[1]));
-                cell.setLaunchAnnounced(data[2]);
+                cell.setLaunchAnnounced(cleanLaunchAnnounced(data[2], id));
                 cell.setLaunchStatus(data[3]);
                 cell.setBodyDimensions(data[4]);
                 cell.setBodyWeight(data[5]);
@@ -40,12 +40,16 @@ public class CellsManipulation {
                 cellMap.put(id++, cell);
             }
 
-            //Print out initial cells
-            for(int i = 1; i <= cellMap.size(); i++){
-                Cell cell = cellMap.get(i);
-                System.out.println("Cell " + i + ": " + cell.getlaunchAnnounced().toString() );
+           //Print out initial cells
+           for(int i = 1; i <= cellMap.size(); i++){
+            Cell cell = cellMap.get(i);
+            if (cell.getlaunchAnnounced() == null){
+                System.out.println("Cell " + i + ": " + "Null");
             }
-
+            else {
+                System.out.println("Cell" + i + ": " + cell.getlaunchAnnounced());
+            }
+        }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,7 +62,11 @@ public class CellsManipulation {
         return input;
     }
 
-    public static Integer cleanLaunchAnnounced(String input){
+    //This function takes in the input of the launch announced string, cleans it,
+    //and returns the year. If a year cannot be parsed, it is set to null.
+    public static Integer cleanLaunchAnnounced(String input, Integer id){
+        input = removeQuotes(input);
+
         Integer returnValue;
         if(input.length() < 4){
             returnValue = null;
@@ -74,11 +82,16 @@ public class CellsManipulation {
         return returnValue;
     }
 
+    //Remove quotations from within strings
+    public static String removeQuotes(String str) {
+        return str.replace("\"", "");
+    }
 
+    //Helper function used to check if number is an integer or not
     public static boolean isNumeric(String str) {
         try {
             
-            Double.parseDouble(str);
+            Integer.parseInt(str);
             return true;
         } catch (NumberFormatException e) {
             return false;
@@ -90,7 +103,7 @@ public class CellsManipulation {
 class Cell {
     private String oem;
     private String model;
-    private String launch_announced;
+    private Integer launch_announced;
     private String launch_status;
     private String body_dimensions;
     private String body_weight;
@@ -118,11 +131,11 @@ class Cell {
         this.model = model;
     }  
 
-    public String getlaunchAnnounced(){
+    public Integer getlaunchAnnounced(){
         return launch_announced;
     }
 
-    public void setLaunchAnnounced(String launchedAnnounced){
+    public void setLaunchAnnounced(Integer launchedAnnounced){
         this.launch_announced = launchedAnnounced;
     }
 
