@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.HashMap;
 
 public class CellsManipulation {
@@ -26,7 +28,7 @@ public class CellsManipulation {
                 cell.setOEM(cleanStrings(data[0]));
                 cell.setModel(cleanStrings(data[1]));
                 cell.setLaunchAnnounced(cleanLaunchAnnounced(data[2], id));
-                cell.setLaunchStatus(data[3]);
+                cell.setLaunchStatus(cleanLaunchStatus(data[3]));
                 cell.setBodyDimensions(data[4]);
                 cell.setBodyWeight(data[5]);
                 cell.setBodySim(data[6]);
@@ -43,12 +45,9 @@ public class CellsManipulation {
            //Print out initial cells
            for(int i = 1; i <= cellMap.size(); i++){
             Cell cell = cellMap.get(i);
-            if (cell.getlaunchAnnounced() == null){
-                System.out.println("Cell " + i + ": " + "Null");
-            }
-            else {
-                System.out.println("Cell" + i + ": " + cell.getlaunchAnnounced());
-            }
+            
+            //System.out.println("Cell" + i + ": " + cell.getLaunchStatus());
+            
         }
         } catch (IOException e) {
             e.printStackTrace();
@@ -85,6 +84,23 @@ public class CellsManipulation {
     //Remove quotations from within strings
     public static String removeQuotes(String str) {
         return str.replace("\"", "");
+    }
+
+    public static String cleanLaunchStatus(String str) {
+        //Regular expression to match a 4-digit year
+        str = removeQuotes(str);
+        Pattern pattern = Pattern.compile("\\b\\d{4}\\b");
+        Matcher matcher = pattern.matcher(str);
+        
+        //Check if a match is found
+        if("Discontinued".equals(str) || "Cancelled".equals(str )){
+            return str;
+        }
+        else if (matcher.find()) {
+            return matcher.group();
+        } else {
+            return null; 
+        }
     }
 
     //Helper function used to check if number is an integer or not
