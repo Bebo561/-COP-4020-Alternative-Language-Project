@@ -41,20 +41,44 @@ public class CellsManipulation {
                 //Store each cell object in hashmap, mapped to its row number.
                 cellMap.put(id++, cell);
             }
-
-            //Initialize unique data function input arrays
-            ArrayList<String> oemList = new ArrayList<>();
-
+            displayUniqueData(cellMap);
 
            //Get unique data for each cell attribute
-           for(int i = 1; i <= cellMap.size(); i++){
-            Cell cell = cellMap.get(i);
-            oemList.add(cell.getOEM());
-            
-            
-        }
+           
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void displayUniqueData(HashMap<Integer, Cell> cellMap){
+        //Initialize unique data function input arrays
+        ArrayList<String> oemList = new ArrayList<>();
+        ArrayList<String> modelList = new ArrayList<>();
+        ArrayList<Integer> launchAnnouncedList = new ArrayList<>();
+        ArrayList<String> launchStatusList = new ArrayList<>();
+        ArrayList<String> bodyDimensionsList = new ArrayList<>();
+        ArrayList<Float> bodyWeightList = new ArrayList<>();
+        ArrayList<String> bodySimList = new ArrayList<>();
+        ArrayList<String> displayTypeList = new ArrayList<>();
+        ArrayList<Float> displaySizeList = new ArrayList<>();
+        ArrayList<String> displayResolutionList = new ArrayList<>();
+        ArrayList<String> featureSensorsList = new ArrayList<>();
+        ArrayList<String> platformOSsList = new ArrayList<>();
+
+        for(int i = 1; i <= cellMap.size(); i++){
+            Cell cell = cellMap.get(i);
+            oemList.add(cell.getOEM());
+            modelList.add(cell.getModel());
+            launchAnnouncedList.add(cell.getlaunchAnnounced());
+            launchStatusList.add(cell.getLaunchStatus());
+            bodyDimensionsList.add(cell.getBodyDimensions());
+            bodyWeightList.add(cell.getBodyWeight());
+            bodySimList.add(cell.getBodySim());
+            displayTypeList.add(cell.getDisplayType());
+            displaySizeList.add(cell.getDisplaySize());
+            displayResolutionList.add(cell.getDisplayResolution());
+            featureSensorsList.add(cell.getFeaturesSensors());
+            platformOSsList.add(cell.getPlatformOS());
         }
     }
 
