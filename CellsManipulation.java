@@ -80,19 +80,47 @@ public class CellsManipulation {
             featureSensorsList.add(cell.getFeaturesSensors());
             platformOSsList.add(cell.getPlatformOS());
         }
+
+        Set<String> uniqueOEM = uniqueDataStrings(oemList);
+        Set<String> uniqueModel = uniqueDataStrings(modelList);
+        Set<Integer> uniqueLaunchAnnounced = uniqueDataInteger(launchAnnouncedList);
+        Set<String> uniqueLaunchStatus = uniqueDataStrings(launchStatusList);
+        Set<String> uniqueBodyDimension = uniqueDataStrings(bodyDimensionsList);
+        Set<Float> uniqueBodyWeightList = uniqueDataFloats(bodyWeightList);
+        Set<String> uniqueBodySim = uniqueDataStrings(bodySimList);
+        Set<String> uniqueDisplayType = uniqueDataStrings(displayTypeList);
+        Set<Float> uniqueDisplaySize = uniqueDataFloats(displaySizeList);
+        Set<String> uniqueDisplayResolution = uniqueDataStrings(displayResolutionList);
+        Set<String> uniqueFeatureSensors = uniqueDataStrings(featureSensorsList);
+        Set<String> uniquePlatformOS = uniqueDataStrings(platformOSsList);
+
+        System.out.println("Unique items for OEM: " + uniqueOEM);
+        System.out.println("\n\nUnique items for Model: " + uniqueModel);
+        System.out.println("\n\nUnique items for Launch Announced: " + uniqueLaunchAnnounced);
+        System.out.println("\n\nUnique items for Launch Status: " + uniqueLaunchStatus);
+        System.out.println("\n\nUnique items for Body Dimension: " + uniqueBodyDimension);
+        System.out.println("\n\nUnique items for Body Weight: " + uniqueBodyWeightList);
+        System.out.println("\n\nUnique items for Body Sim: " + uniqueBodySim);
+        System.out.println("\n\nUnique items for Display Type: " + uniqueDisplayType);
+        System.out.println("\n\nUnique items for Display Size: " + uniqueDisplaySize);
+        System.out.println("\n\nUnique items for Display Resolution: " + uniqueDisplayResolution);
+        System.out.println("\n\nUnique items for Feature Sensors: " + uniqueFeatureSensors);
+        System.out.println("\n\nUnique items for Platform OS: " + uniquePlatformOS);
     }
 
     //Returns unique values for input data type of string
-    public static Set<String> uniqueDataStrings(String[] input){
+    public static Set<String> uniqueDataStrings(ArrayList<String> input){
         Set<String> uniqueValues = new HashSet<>();
         for(String item : input){
-            uniqueValues.add(item);
+            String s = clean(item);
+            uniqueValues.add(s);
         }
+
         return uniqueValues;
     }
 
     //Return unique values for input data type of flaot
-    public static Set<Float> uniqueDataFloats(Float[] input){
+    public static Set<Float> uniqueDataFloats(ArrayList<Float> input){
         Set<Float> uniqueValues = new HashSet<>();
         for(Float item : input){
             uniqueValues.add(item);
@@ -100,12 +128,20 @@ public class CellsManipulation {
         return uniqueValues;
     }
 
-    public static Set<Integer> uniqueDataInteger(Integer[] input){
+    public static Set<Integer> uniqueDataInteger(ArrayList<Integer> input){
         Set<Integer> uniqueValues = new HashSet<>();
         for(Integer item : input){
             uniqueValues.add(item);
         }
         return uniqueValues;
+    }
+
+    public static String clean(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return null;
+        }
+        input = input.trim();
+        return input;
     }
 
     public static String cleanPlatformOS(String input) {
