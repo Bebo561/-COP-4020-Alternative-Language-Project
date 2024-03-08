@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Scanner;
 import java.util.*;
 
 public class CellsManipulation {
@@ -43,10 +44,56 @@ public class CellsManipulation {
             }
             displayUniqueData(cellMap);
 
+            boolean userInput = true;
+            Scanner scanner = new Scanner(System.in);
+
+            while (userInput) {
+                System.out.println("\nOptions:");
+                System.out.println("1. Add an object to the cell");
+                System.out.println("2. Delete an existing cell by index");
+                System.out.println("3. Exit");
+    
+                System.out.print("Enter your choice: ");
+                int choice = scanner.nextInt();
+    
+                switch (choice) {
+                    case 1:
+                        
+                        break;
+
+                    case 2:
+                        System.out.print("Enter index of cell to delete");
+                        int indexToDelete = getIntInput(scanner);
+                        if (indexToDelete >= 0 && indexToDelete < cellMap.size()) {
+                            cellMap.remove(indexToDelete);
+                            System.out.println("Object deleted from the cell.");
+                        } else {
+                            System.out.println("Invalid index. Please enter a valid index.");
+                        }
+
+                    case 3:
+                        userInput = false;
+                        break;
+                        
+                    default:
+                        System.out.println("Invalid choice. Please enter a valid option.");
+                }
+            }
            //Get unique data for each cell attribute
            
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static int getIntInput(Scanner scanner) {
+        while (true) {
+            try {
+                return scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.print("Invalid input. Please enter a number: ");
+                scanner.nextLine(); 
+            }
         }
     }
 
